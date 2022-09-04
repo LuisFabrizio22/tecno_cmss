@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,7 +38,21 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
+ 
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function getAddress(){
+       return $this->hasMany(Models\UserAddress::class, 'user_id', 'id')->with(['getState', 'getCity']);
+        }
+    public function getAddressDefault(){
+        return $this->hasOne(Models\UserAddress::class, 'user_id', 'id')->where('defaul', '1')->with(['getState', 'getCity']);
+        }
+    public function getOrders(){
+        return $this->hasMany('App\Models\Order', 'user_id', 'id')->where('status', '!=', '0');
+    }
+    public function getOrdersProcess(){
+        
+    }
 }
